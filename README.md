@@ -2,7 +2,7 @@
 
 Sentiment analysis, also referred to as opinion mining, is an approach to natural language processing (NLP) that identifies the emotional tone behind a body of text. This is a popular way for organizations to determine and categorize opinions about a product, service, or idea.
 
-Using textblob in python developing project understand about sentiment analysis 
+Using textblob in python developing a project to understand about sentiment analysis 
 
 ## Packages 
 
