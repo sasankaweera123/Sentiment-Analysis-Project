@@ -8,6 +8,8 @@ Using textblob in python developing a project to understand about sentiment anal
 
 - [textblob](https://pypi.org/project/textblob/): TextBlob is a Python (2 and 3) library for processing textual data. It provides a consistent API for diving into common natural language processing (NLP) tasks such as part-of-speech tagging, noun phrase extraction, sentiment analysis, and more.
 
+- [pandas](https://pypi.org/project/pandas/): pandas is a Python package that provides fast, flexible, and expressive data structures designed to make working with "relational" or "labeled" data both easy and intuitive. It aims to be the fundamental high-level building block for doing practical, real world data analysis in Python. Additionally, it has the broader goal of becoming the most powerful and flexible open source data analysis / manipulation tool available in any language. It is already well on its way towards this goal.
+
 
 # Licence 
 
