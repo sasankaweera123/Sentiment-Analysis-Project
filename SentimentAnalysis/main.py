@@ -17,10 +17,10 @@ subData = reviewDataSet[["Review Title", "Rating", "Comments", "Useful"]]
 # print(subData.shape)
 
 # Useful Column Clean
-subData.Useful = subData.Useful.astype(str).str[0]
+subData.Useful = subData.Useful.astype(str).str[:2]
 subData.Useful = subData.Useful.replace(" ", 0)
-subData.Useful = subData.Useful.replace("n", 0)
-subData.Useful = subData.Useful.replace("O", 1)
+subData.Useful = subData.Useful.replace("na", 0)
+subData.Useful = subData.Useful.replace("On", 1)
 subData.Useful = subData.Useful.astype('int64')
 
 # Rating Column Clean
@@ -83,3 +83,5 @@ elif avgTC == 0:
 print("Average_Rating = ", avgRating)
 print("predict_Rating = ", predict_Rating)
 print("Accuracy = ", (predict_Rating / avgRating) * 100, "%")
+
+# subData.to_csv("data/edited.csv")
