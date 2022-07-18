@@ -1,8 +1,6 @@
 import pandas as pd
-import numpy as np
 from textblob import TextBlob
-import matplotlib.pyplot as plt
-from nltk.corpus import stopwords
+
 
 pd.options.mode.chained_assignment = None
 
@@ -41,7 +39,6 @@ for i in range(0, subData.shape[0]):
 # Add Review Title Sentiment to table
 subData = pd.concat([subData, pd.Series(tPolarity)], axis=1)
 subData.rename(columns={subData.columns[4]: "T_Sentiment"}, inplace=True)
-# subData.to_csv("data/edited.csv")
 
 # using Comments get the sentiment
 cPolarity = []
@@ -55,27 +52,34 @@ for i in range(0, subData.shape[0]):
 subData = pd.concat([subData, pd.Series(cPolarity)], axis=1)
 subData.rename(columns={subData.columns[5]: "C_Sentiment"}, inplace=True)
 
-avgRating = (subData['Rating'].sum()) / subData.shape[0]
+# subData.to_csv("data/edited.csv")
 
-# Printout the Necessary details
-print("Average Rating in Data set", avgRating)
-print("Comment Sentiment Value = ", subData["C_Sentiment"].sum() / subData.shape[0])
-print("Review Title Sentiment Value =  ", subData["T_Sentiment"].sum() / subData.shape[0])
-avg_Sentiment = (((subData["C_Sentiment"].sum() + subData["T_Sentiment"].sum() )/ subData.shape[
-    0])) / 2
-print("Average Sentiment =", avg_Sentiment)
+# Find True Sum of Sentiment & Rating Sum (Using Useful Column also)
+tSum = 0  # Review Title Sentiment Sum
+cSum = 0  # Comments Sentiment Sum
+rSum = 0  # Rating Sum
+for i in range(0, subData.shape[0]):
+    mulValue = subData.iloc[i][3] + 1
+    tSum = tSum + (subData.iloc[i][4] * mulValue)
+    cSum = cSum + (subData.iloc[i][5] * mulValue)
+    rSum = rSum + (subData.iloc[i][1] * mulValue)
+
+# Calculate Average of Sums
+avgTSum = tSum / (subData["Useful"].sum() + subData.shape[0])
+avgCSum = cSum / (subData["Useful"].sum() + subData.shape[0])
+avgTC = (avgTSum + avgCSum) / 2  # Average of TSum & CSum
+avgRating = rSum / (subData["Useful"].sum() + subData.shape[0])  # Average of the Rating
 
 # Convert Sentiment Value to Rating Value
 predict_Rating = 0
-if avg_Sentiment > 0:
-    predict_Rating = (3 + (avg_Sentiment * 2))
-elif avg_Sentiment < 0:
-    predict_Rating = (3 - (2 + (avg_Sentiment * 3)))
-elif avg_Sentiment == 0:
+if avgTC > 0:
+    predict_Rating = (3 + (avgTC * 2))
+elif avgTC < 0:
+    predict_Rating = (3 - (2 + (avgTC * 3)))
+elif avgTC == 0:
     predict_Rating = 3
 
 # Printout the Target Values
+print("Average_Rating = ", avgRating)
 print("predict_Rating = ", predict_Rating)
-print("Accuracy = ", (predict_Rating/avgRating) * 100 , "%")
-
-
+print("Accuracy = ", (predict_Rating / avgRating) * 100, "%")
