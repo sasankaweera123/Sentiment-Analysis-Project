@@ -1,7 +1,6 @@
 import pandas as pd
 from textblob import TextBlob
 
-
 pd.options.mode.chained_assignment = None
 
 sentence = "This is a good product"
@@ -65,10 +64,11 @@ for i in range(0, subData.shape[0]):
     rSum = rSum + (subData.iloc[i][1] * mulValue)
 
 # Calculate Average of Sums
-avgTSum = tSum / (subData["Useful"].sum() + subData.shape[0])
-avgCSum = cSum / (subData["Useful"].sum() + subData.shape[0])
+divideFactor = subData["Useful"].sum() + subData.shape[0]  # To Find the Average this is the dividing Factor
+avgTSum = tSum / divideFactor
+avgCSum = cSum / divideFactor
 avgTC = (avgTSum + avgCSum) / 2  # Average of TSum & CSum
-avgRating = rSum / (subData["Useful"].sum() + subData.shape[0])  # Average of the Rating
+avgRating = rSum / divideFactor  # Average of the Rating
 
 # Convert Sentiment Value to Rating Value
 predict_Rating = 0
