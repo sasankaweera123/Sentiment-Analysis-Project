@@ -1,5 +1,8 @@
+import matplotlib.pyplot as plt
 import pandas as pd
+from nltk.corpus import stopwords as st
 from textblob import TextBlob
+from wordcloud import WordCloud
 
 pd.options.mode.chained_assignment = None
 
@@ -85,3 +88,12 @@ print("predict_Rating = ", predict_Rating)
 print("Accuracy = ", (predict_Rating / avgRating) * 100, "%")
 
 # subData.to_csv("data/edited.csv")
+
+# Create Positive cloud image Using Review Title
+pos_subData = subData[subData.T_Sentiment > 0]
+cloud = WordCloud(max_words=250, stopwords=st.words("english")).generate(str(pos_subData["Review Title"]))
+plt.Figure(figsize=(10, 10))
+plt.imshow(cloud)
+
+image = cloud.to_image()
+image.show()
