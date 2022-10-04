@@ -6,29 +6,40 @@ from wordcloud import WordCloud
 
 pd.options.mode.chained_assignment = None
 
-sentence = "This is a good product"
 
-blob = TextBlob(sentence)
+def check_bob(text):
+    return TextBlob(text).sentiment.polarity
+
+
 # print(blob.sentiment)
 # Upload data set
-reviewDataSet = pd.read_csv(r'data/redmi6.csv', sep=',', encoding='cp1252')
+def create_data_set():
+    review_data_set = pd.read_csv(r'data/redmi6.csv', sep=',', encoding='cp1252')
+    return review_data_set
 
-# print(reviewDataSet.dtypes)
+
 # Crete a query
-subData = reviewDataSet[["Review Title", "Rating", "Comments", "Useful"]]
+
+sub_data = create_data_set()[["Review Title", "Rating", "Comments", "Useful"]]
+
 
 # print(subData.shape)
+def data_cleaning(subData):
+    # Useful Column Clean
+    subData.Useful = subData.Useful.astype(str).str[:2]
+    subData.Useful = subData.Useful.replace(" ", 0)
+    subData.Useful = subData.Useful.replace("na", 0)
+    subData.Useful = subData.Useful.replace("On", 1)
+    subData.Useful = subData.Useful.astype('int64')
 
-# Useful Column Clean
-subData.Useful = subData.Useful.astype(str).str[:2]
-subData.Useful = subData.Useful.replace(" ", 0)
-subData.Useful = subData.Useful.replace("na", 0)
-subData.Useful = subData.Useful.replace("On", 1)
-subData.Useful = subData.Useful.astype('int64')
+    # Rating Column Clean
+    subData.Rating = subData.Rating.astype(str).str[0] + ".0"
+    subData.Rating = subData.Rating.astype('float')
 
-# Rating Column Clean
-subData.Rating = subData.Rating.astype(str).str[0] + ".0"
-subData.Rating = subData.Rating.astype('float')
+    return subData
+
+
+subData = data_cleaning(sub_data)
 
 # using review title get the sentiment
 tPolarity = []
@@ -66,12 +77,20 @@ for i in range(0, subData.shape[0]):
     cSum = cSum + (subData.iloc[i][5] * mulValue)
     rSum = rSum + (subData.iloc[i][1] * mulValue)
 
-# Calculate Average of Sums
 divideFactor = subData["Useful"].sum() + subData.shape[0]  # To Find the Average this is the dividing Factor
-avgTSum = tSum / divideFactor
-avgCSum = cSum / divideFactor
-avgTC = (avgTSum + avgCSum) / 2  # Average of TSum & CSum
-avgRating = rSum / divideFactor  # Average of the Rating
+
+
+# Calculate Average of Sums
+def calculate_average(t_sum, c_sum, r_sum, divide_factor):
+    avgTSum = t_sum / divide_factor
+    avgCSum = c_sum / divide_factor
+    avgTC = (avgTSum + avgCSum) / 2  # Average of TSum & CSum
+    avgRating = r_sum / divide_factor  # Average of the Rating
+
+    return avgTC, avgRating
+
+
+avgTC, avgRating = calculate_average(tSum, cSum, rSum, divideFactor)
 
 # Convert Sentiment Value to Rating Value
 predict_Rating = 0
@@ -87,7 +106,7 @@ print("Average_Rating = ", avgRating)
 print("predict_Rating = ", predict_Rating)
 print("Accuracy = ", (predict_Rating / avgRating) * 100, "%")
 
-# subData.to_csv("data/edited.csv")
+subData.to_csv("data/edited.csv")
 
 # Create Positive cloud image Using Review Title
 pos_subData = subData[subData.T_Sentiment > 0]
