@@ -14,9 +14,17 @@ class TestMain(unittest.TestCase):
         self.assertEqual(result.shape, (280, 7))
 
     def test_calculate_average(self):
-        avg_TC, avg_R = main.calculate_average(10, 10, 12, 2)
-        self.assertEqual(avg_TC, 5)
-        self.assertEqual(avg_R, 6)
+        avg_title_comment, avg_rating = main.calculate_average([10, 10, 12], 2)
+        self.assertEqual(avg_title_comment, 5)
+        self.assertEqual(avg_rating, 6)
+
+    def test_convert_sentiment_to_rating(self):
+        result = main.convert_sentiment_to_rating(0)
+        self.assertEqual(result, 3)
+
+    def create_word_cloud(self):
+        result = main.create_word_cloud()
+        self.assertEqual(result, None)
 
 
 if __name__ == '__main__':
